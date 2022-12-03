@@ -12,12 +12,12 @@ impl Player {
     }
 
     // A function to render the character
-    pub fn render(&self, ctx: &mut BTerm, _camera: &Camera) {
+    pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
         ctx.set_active_console(1);
 
         ctx.set(
-            self.position.x,
-            self.position.y,
+            self.position.x - camera.left_x,
+            self.position.y - camera.top_y,
             WHITE,
             BLACK,
             to_cp437('@')
