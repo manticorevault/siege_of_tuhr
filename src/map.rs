@@ -31,7 +31,7 @@ impl Map {
     // A function to determine if the player's move is valid,
     // either inside boundaries and not on a Wall Tile
     pub fn walkable_path(&self, point: Point) -> bool {
-        self.in_bounds(point) && self.tiles[map_index(point.x, point.y)]==TileType::Floor
+        self.in_bounds(point) && self.tiles[map_index(point.x, point.y)] == TileType::Floor
     }
 
     // A function to indicate an error if the coordinates are,
@@ -45,21 +45,34 @@ impl Map {
     }
 
     // A function to render the map
-    pub fn render(&self, ctx: &mut BTerm) {
-        for y in 0..SCREEN_HEIGHT {
-            for x in 0..SCREEN_WIDTH {
-                let index = map_index(x, y);
+    pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
+        ctx.set_active_console(0);
 
-                match self.tiles[index] {
-                    TileType::Wall => {
-                        ctx.set(x, y, GRAY, BLACK,
-                            to_cp437('#'));
-                    }
+        for y in camera.top_y .. camera.bottom_y {
+            for x in camera.left_x .. camera.right_x {
+                if self.in_bounds(Point::new(x, y)) {
+                    let index = map_index(x, y);
 
-                    TileType::Floor => {
-                        ctx.set(x, y, YELLOW, BLACK,
-                            to_cp437('.')
-                        )
+                    match self.tiles[index] {
+                        TileType::Floor => {
+                            ctx.set(
+                                x - camera.left_x,
+                                y - camera.top_y,
+                                WHITE,
+                                BLACK,
+                                to_cp437('.')
+                            );
+                        }
+
+                        TileType::Wall => {
+                            ctx.set(
+                                x - camera.left_x,
+                                y - camera.top_y,
+                                WHITE,
+                                BLACK,
+                                to_cp437('#')
+                            );
+                        }
                     }
                 }
             }

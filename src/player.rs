@@ -12,7 +12,9 @@ impl Player {
     }
 
     // A function to render the character
-    pub fn render(&self, ctx: &mut BTerm) {
+    pub fn render(&self, ctx: &mut BTerm, _camera: &Camera) {
+        ctx.set_active_console(1);
+
         ctx.set(
             self.position.x,
             self.position.y,
@@ -24,7 +26,7 @@ impl Player {
 
     // A function to make the character movable
     // on top of the floor
-    pub fn update(&mut self, ctx: &mut BTerm, map : &Map) {
+    pub fn update(&mut self, ctx: &mut BTerm, map : &Map, camera: &mut Camera) {
         if let Some(key) = ctx.key {
             let delta = match key {
                 VirtualKeyCode::A => Point::new(-1, 0),
@@ -33,9 +35,12 @@ impl Player {
                 VirtualKeyCode::S => Point::new(0, 1),
                 _ => Point::zero()
             };
+
             let new_position = self.position + delta;
+
             if map.walkable_path(new_position) {
                 self.position = new_position;
+                camera.on_player_move(new_position);
             }
         }
     }
