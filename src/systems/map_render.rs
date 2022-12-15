@@ -21,7 +21,7 @@ pub fn map_render(#[resource] map: &Map, #[resource] camera: &Camera) {
                 draw_batch.set(
                     point - offset,
                     ColorPair::new(
-                        YELLOW,
+                        WHITE,
                         BLACK
                     ),
                     glyph
