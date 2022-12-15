@@ -43,39 +43,4 @@ impl Map {
             Some(map_index(point.x, point.y))
         }
     }
-
-    // A function to render the map
-    pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
-        ctx.set_active_console(0);
-
-        for y in camera.top_y .. camera.bottom_y {
-            for x in camera.left_x .. camera.right_x {
-                if self.in_bounds(Point::new(x, y)) {
-                    let index = map_index(x, y);
-
-                    match self.tiles[index] {
-                        TileType::Floor => {
-                            ctx.set(
-                                x - camera.left_x,
-                                y - camera.top_y,
-                                WHITE,
-                                BLACK,
-                                to_cp437('.')
-                            );
-                        }
-
-                        TileType::Wall => {
-                            ctx.set(
-                                x - camera.left_x,
-                                y - camera.top_y,
-                                WHITE,
-                                BLACK,
-                                to_cp437('#')
-                            );
-                        }
-                    }
-                }
-            }
-        }
-    }
 }
