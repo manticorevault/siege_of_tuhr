@@ -5,12 +5,13 @@ mod map_builder;
 mod camera;
 mod components;
 mod spawner;
+mod systems;
 
 mod prelude {
     pub use bracket_lib::prelude::*;
     pub use legion::*;
     pub use legion::world::SubWorld;
-    pub use legion::systems::CommanderBuffer;
+    pub use legion::systems::CommandBuffer;
 
     pub const SCREEN_WIDTH: i32 = 80;
     pub const SCREEN_HEIGHT: i32 = 50;
@@ -20,8 +21,8 @@ mod prelude {
     pub use crate::components::*;
     pub use crate::spawner::*;
     pub use crate::map::*;
-    pub use crate::player::*;
     pub use crate::map_builder::*;
+    pub use crate::systems::*;
     pub use crate::camera::*;
 }
 
@@ -30,7 +31,7 @@ use prelude::*;
 struct State {
     ecs: World,
     resources: Resources,
-    systems: Schedule
+    systems: Schedule,
 }
 
 impl State {
@@ -58,6 +59,10 @@ impl GameState for State {
         ctx.cls();
         ctx.set_active_console(1);
         ctx.cls();
+
+        self.resources.insert(ctx.key);
+        self.systems.execute(&mut self.ecs, &mut self.resources);
+        render_draw_buffer(ctx).expect("Render error");
     }
 }
 
