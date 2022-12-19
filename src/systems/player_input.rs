@@ -8,7 +8,8 @@ pub fn player_input(
     ecs: &mut SubWorld,
     #[resource] map: &Map,
     #[resource] key: &Option<VirtualKeyCode>,
-    #[resource] camera: &mut Camera
+    #[resource] camera: &mut Camera,
+    #[resource] turn_state: &mut TurnState
     ) {
     if let Some(key) = key {
         let delta = match key {
@@ -29,6 +30,7 @@ pub fn player_input(
                 if map.walkable_path(destination) {
                     *pos = destination;
                     camera.on_player_move(destination);
+                    *turn_state = TurnState::PlayerTurn;
                 }
             });
         }
